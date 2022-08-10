@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  web:
+    build: ./
+    container_name: backend_flask
+    restart: on-failure
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    command: python wsgi.py
+    volumes:
+      - ./:/usr/src/app/
+    env_file:
+      - .env
+    depends_on:
+          - postgres_db
+
+  postgres_db:
+    image: postgres:13.3
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${PASSWORD}
+    ports:
+      - "${PORT}:${PORT}"
