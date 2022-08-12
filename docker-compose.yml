@@ -2,7 +2,7 @@ version: "3.9"
 services:
   web:
     build: ./
-    container_name: backend_flask
+    container_name: shift_backend
     restart: on-failure
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
@@ -12,14 +12,15 @@ services:
     env_file:
       - .env
     depends_on:
-          - postgres_db
+          - shift_db
 
-  postgres_db:
+  shift_db:
     image: postgres:13.3
-    container_name: postgres_db
+    container_name: shift_db
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${PASSWORD}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "${PORT}:${PORT}"
+      - "${DB_PORT}:5432"
+    command: -p ${DB_PORT}
