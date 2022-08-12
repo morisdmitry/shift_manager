@@ -11,8 +11,8 @@
 
 # How to start?
 
-- make your .env file. Just copy .env.file and remove the .file at the end. In .env is default values
-
+- make your .env file. Just copy .env.test and remove the .test at the end. In .env is default values
+- switch DOCKER value to 1 to connect with database in docker container and 0 to connect with local database
 - in root path make commands:
   `docker-compose build`
   `docker-compose up -d`
