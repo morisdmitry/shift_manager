@@ -3,11 +3,11 @@ from typing import Union
 
 from sqlalchemy import and_
 
-from app.database.models import Shift
+from app.database.models import Timeshits
 
 
-class ShiftHandler:
-    max_day_shift = 24
+class TimeshitHandler:
+    max_hour_shift = 24
 
     def __init__(self, data):
         self.data = data
@@ -17,22 +17,6 @@ class ShiftHandler:
     def check_dates(self) -> bool:
         """Check correct dates order"""
         return self.data["start"] < self.data["end"]
-
-    def get_ui_table(self):
-        result = {}
-
-        for i in self.data:
-            result[self.data.index(i)] = {
-                "email": i.email,
-                "start": i.start,
-                "end": i.end,
-            }
-
-        return result
-
-    def get_ui_table2(self):
-
-        pass
 
     def transform_dates(self):
         """Transform dates"""
@@ -61,7 +45,7 @@ class ShiftHandler:
             if current_start.time() != time(0, 0, 0) and self.start_shift:
                 current_start = self.start_shift.start
             common_spending_time = current_end - current_start
-            end_day = timedelta(seconds=self.max_day_shift * 60 * 60)
+            end_day = timedelta(seconds=self.max_hour_shift * 60 * 60)
             res = end_day.total_seconds() - common_spending_time.total_seconds()
             if res < 0:
                 return (
@@ -86,13 +70,13 @@ class ShiftHandler:
     def get_start_shift(self):
         """Check is there note for this day"""
         start_shift = (
-            Shift.query.filter(
+            Timeshits.query.filter(
                 and_(
-                    Shift.email == self.data["email"],
-                    Shift.start >= self.data["start"].date(),
+                    Timeshits.email == self.data["email"],
+                    Timeshits.start >= self.data["start"].date(),
                 )
             )
-            .order_by(Shift.start.asc())
+            .order_by(Timeshits.start.asc())
             .first()
         )
         self.start_shift = start_shift
@@ -102,8 +86,10 @@ class ShiftHandler:
     def check_bisy_time(periods):
         """Check overlapping"""
         for period in periods:
-            res = Shift.query.filter(
-                and_(Shift.email == period["email"], Shift.end > period["start"])
+            res = Timeshits.query.filter(
+                and_(
+                    Timeshits.email == period["email"], Timeshits.end > period["start"]
+                )
             ).first()
             if res:
                 return f"this time is already taken: {res.start} and {res.end}"
