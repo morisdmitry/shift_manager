@@ -1,6 +1,8 @@
 from datetime import datetime
 from app import db
 
+# from sqlalchemy import BigInteger
+
 
 class BaseModel(object):
     def __init__(self, **kwargs):
@@ -22,7 +24,7 @@ class BaseModel(object):
         return obj
 
 
-class Shift(BaseModel, db.Model):
+class Timeshits(BaseModel, db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.String(120), nullable=False)
     start = db.Column(db.DateTime, default=datetime.now())
