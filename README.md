@@ -46,6 +46,7 @@ For the application to work correctly, you need
 ## CLI interface
 
 make this commands in root path(order is important)
+BUG: work only with port 4000 so far. Please use this port for current work
 
 - for post shift `python3 cli.py shifts add <employee_email> <start> <end>`
 - for make report `python3 cli.py shifts report <employee_email>`
